@@ -1,6 +1,8 @@
+import java.util.Comparator;
+import java.util.List;
+
 public class Patient {
     private String name;
-    //int id;
     private int emergLevel;
 
     public Patient(String patientName, int emergencyLvl) {
@@ -8,20 +10,22 @@ public class Patient {
         this.emergLevel = emergencyLvl;
     }
 
-
-
     //Setters
-    public void setName(String name) { this.name = name; }
-    //public void setId(int id) { this.id = id; }
-    public void setEmergLevel(int emergLevel) { this.emergLevel = emergLevel; }
+    public void setEmergLevel(int emergLevel) {
+        this.emergLevel = emergLevel;
+    }
 
-//Getters
-    public String getName() { return this.name; }
-    //public int getId() { return id; }
-    public int getEmergLevel() { return this.emergLevel; }
+    //Getters
+    public String getName() {
+        return this.name;
+    }
+    public int getEmergLevel() {
+        return this.emergLevel;
+    }
 
-
-
-
+    public int compareTo(Patient p1){
+        //if new patient has greater priority, returned int will be greater than zero.
+        return this.getEmergLevel() - p1.getEmergLevel();
+    }
 
 }

@@ -1,6 +1,9 @@
 
 import java.util.*;
 import java.io.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.PriorityQueue;
 
 // write your matric number here:
 // write your name here:
@@ -12,7 +15,7 @@ class EmergencyRoom {
     ArrayList<Patient> patientList;
 
     public EmergencyRoom() {
-        patientList = new ArrayList<Patient>();
+        patientList = new ArrayList<>();
     }
 
     /** Adds patients to patient list when they arrive at Hospital */
@@ -21,13 +24,26 @@ class EmergencyRoom {
         this.patient = new Patient(patientName, emergencyLvl);
         patientList.add(this.patient);
 
+        if(patientList.size() == 1){
+            return;
+        }
+
+        Patient newPatient = this.patient;
+
+        for(int i=patientList.size()-1; i>0; i--){ //-1 since the last index will hold the new patient.
+
+            if(newPatient.compareTo(patientList.get(i-1)) > 0){
+                patientList.set(i,patientList.get(i-1));
+                patientList.set(i-1, newPatient);
+            }
+        }
 
     }
 
+
+
     /** Updates the Emergency Level of patients */
     void UpdateEmergencyLvl(String patientName, int incEmergencyLvl) {
-
-
 
         for(Patient patient: patientList){
             if(patient.getName().equals(patientName)){
@@ -35,21 +51,21 @@ class EmergencyRoom {
                 patient.setEmergLevel(newEmergencyLvl);
             }
         }
-
-
     }
 
     /** Removes treated patients from patientList as they have been treated so are no longer "patients" */
     void Treat(String patientName) {
 
-        Iterator<Patient> iter = this.patientList.iterator();
+        patientList.remove(0);
+
+        /*Iterator<Patient> iter = this.patientList.iterator();
 
         while (iter.hasNext()) {
             Patient p = iter.next();
 
             if (p.getName().equals(patientName))
                 iter.remove();
-        }
+        }*/
 
 
     }
@@ -64,7 +80,10 @@ class EmergencyRoom {
             return noPatientsMessage;
         }
 
-        //Checks emergency level of all patients to find the highest priority patient.
+        Patient highestPriority = patientList.get(0);
+        return highestPriority.getName();
+
+/*        //Checks emergency level of all patients to find the highest priority patient.
         int highestEmergencyLevel = 1;
         String priorityPatientName = "";
 
@@ -75,7 +94,7 @@ class EmergencyRoom {
             }
         }
 
-        return priorityPatientName;
+        return priorityPatientName;*/
     }
 
     void run() throws Exception {
