@@ -40,7 +40,7 @@ class EmergencyRoom {
         Patient parentPatient = patientList.get(parentIndex);
 
         //if new patient has emergency level more urgent than it's parent, stop.
-        if(index == 0 || (parentPatient.getEmergLevel() - newPatient.getEmergLevel()) > 0){
+        if(index == 0 || (parentPatient.getEmergLevel() - newPatient.getEmergLevel()) >= 0){
             return;
         }
 
@@ -48,68 +48,8 @@ class EmergencyRoom {
         patientList.set(parentIndex,newPatient);
         patientList.set(index, parentPatient);
 
-
         bubbleUp(parentIndex);
 
-    }
-
-    public boolean isLeaf(int index){
-        //checking if left child index is the same or greater than size of PatientList
-        //if it is, child doesn't exist.
-        return(index*2 >= patientList.size()-1);
-    }
-
-    public void sinkDown(int index){
-        //check that Patient at index has children
-        if(isLeaf(index)){
-            return;
-        }
-
-        Patient parentPatient = patientList.get(index);
-        int rightChildIndex = index * 2 + 2;
-        int leftChildIndex = index * 2 + 1;
-        int minChildIndex;
-
-        //if the right child doesn't exist then the left child has smallest emergency level.
-        if(rightChildIndex >= patientList.size()-1){
-            minChildIndex = leftChildIndex;
-        } else {
-
-            //find child with smallest emergency level
-            Patient leftChild = patientList.get(leftChildIndex);
-            Patient rightChild = patientList.get(rightChildIndex);
-            if(leftChild.getEmergLevel() < rightChild.getEmergLevel()){
-                minChildIndex = leftChildIndex;
-            } else {
-                minChildIndex = rightChildIndex;
-            }
-        }
-
-        Patient minPatient = patientList.get(minChildIndex);
-
-        //check if parent is already in order.
-        if(parentPatient.getEmergLevel() >= minPatient.getEmergLevel()){
-            return;
-        }
-
-        patientList.set(minChildIndex, parentPatient);
-        patientList.set(index, minPatient);
-
-        sinkDown(minChildIndex);
-
-    }
-
-
-
-    /** Updates the Emergency Level of patients */
-    void UpdateEmergencyLvl(String patientName, int incEmergencyLvl) {
-
-        for(Patient patient: patientList){
-            if(patient.getName().equals(patientName)){
-                int newEmergencyLvl = patient.getEmergLevel()+incEmergencyLvl;
-                patient.setEmergLevel(newEmergencyLvl);
-            }
-        }
     }
 
     /** Removes treated patients from patientList as they have been treated so are no longer "patients" */
@@ -129,6 +69,54 @@ class EmergencyRoom {
         sinkDown(0);
     }
 
+
+    public void sinkDown(int index){
+        //check that Patient at index has children
+        if(isLeaf(index)){
+            return;
+        }
+
+        Patient parentPatient = patientList.get(index);
+        int rightChildIndex = index * 2 + 2;
+        int leftChildIndex = index * 2 + 1;
+        int minChildIndex;
+
+        //if the right child doesn't exist then the left child has smallest emergency level.
+        if(rightChildIndex > patientList.size()-1){
+            minChildIndex = leftChildIndex;
+       } else {
+
+            //find child with smallest emergency level
+            Patient leftChild = patientList.get(leftChildIndex);
+            Patient rightChild = patientList.get(rightChildIndex);
+            if(leftChild.getEmergLevel() > rightChild.getEmergLevel()){
+                minChildIndex = leftChildIndex;
+            } else {
+                minChildIndex = rightChildIndex;
+            }
+        }
+
+        Patient minPatient = patientList.get(minChildIndex);
+
+        //check if parent is already in order.
+        if(parentPatient.getEmergLevel() >= minPatient.getEmergLevel()){
+            return;
+        }
+
+        patientList.set(minChildIndex, parentPatient);
+        patientList.set(index, minPatient);
+
+        sinkDown(minChildIndex);
+    }
+
+    public boolean isLeaf(int index){
+        //checking if left child index is the same or greater than size of PatientList
+        //if it is, child doesn't exist.
+        return(index*2+1 >= patientList.size()-1);
+    }
+
+
+
     /** Reports the name of the patient to the doctor that needs the most attention. If there is no more patient to
      // be taken care of, return a String "The emergency suite is empty" */
     String Query() {
@@ -140,9 +128,19 @@ class EmergencyRoom {
         }
 
         Patient highestPriority = patientList.get(0);
-        //Treat("");
         return highestPriority.getName();
 
+    }
+
+    /** Updates the Emergency Level of patients */
+    void UpdateEmergencyLvl(String patientName, int incEmergencyLvl) {
+
+        for(Patient patient: patientList){
+            if(patient.getName().equals(patientName)){
+                int newEmergencyLvl = patient.getEmergLevel()+incEmergencyLvl;
+                patient.setEmergLevel(newEmergencyLvl);
+            }
+        }
     }
 
     void run() throws Exception {
