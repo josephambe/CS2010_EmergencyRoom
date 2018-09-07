@@ -40,7 +40,7 @@ class EmergencyRoom {
         Patient parentPatient = patientList.get(parentIndex);
 
         //if new patient has emergency level more urgent than it's parent, stop.
-        if(index == 0 || (newPatient.getEmergLevel() - parentPatient.getEmergLevel()) > 0){
+        if(index == 0 || (parentPatient.getEmergLevel() - newPatient.getEmergLevel()) > 0){
             return;
         }
 
@@ -88,7 +88,7 @@ class EmergencyRoom {
         Patient minPatient = patientList.get(minChildIndex);
 
         //check if parent is already in order.
-        if(parentPatient.getEmergLevel() < minPatient.getEmergLevel()){
+        if(parentPatient.getEmergLevel() >= minPatient.getEmergLevel()){
             return;
         }
 
@@ -115,25 +115,12 @@ class EmergencyRoom {
     /** Removes treated patients from patientList as they have been treated so are no longer "patients" */
     void Treat(String patientName) {
 
-        //check if empty
-        if(patientList.isEmpty()){
-            return;
-        }
-
-        //remove Patient with most priority (lowest emergency level)
-        patientList.remove(0);
-
-        //check if empty
-        if(patientList.isEmpty()){
-            return;
-        }
-
         //replace the root with the last patient in list
         Patient lowestPriority = patientList.get(patientList.size()-1);
         patientList.set(0, lowestPriority);
 
         //remove patient who has been shifted unless there is only one Patient in list
-        if(patientList.size() == 1){
+        if(patientList.size() == 0){
             return;
         } else {
             patientList.remove(patientList.size()-1);
@@ -153,6 +140,7 @@ class EmergencyRoom {
         }
 
         Patient highestPriority = patientList.get(0);
+        //Treat("");
         return highestPriority.getName();
 
     }
