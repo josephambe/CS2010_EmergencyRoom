@@ -1,5 +1,4 @@
-import java.util.Comparator;
-import java.util.List;
+
 
 public class Patient {
     private String name;
@@ -23,9 +22,5 @@ public class Patient {
         return this.emergLevel;
     }
 
-    public int compareTo(Patient p1){
-        //if new patient has greater priority, returned int will be greater than zero.
-        return this.getEmergLevel() - p1.getEmergLevel();
-    }
 
 }
